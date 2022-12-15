@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct TwitApp: App {
+    init() {
+        FirebaseApp.configure() // Initializing FireBase
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI // For Native SwiftUI image Picker
+import Firebase
 
 struct LoginView: View {
     //MARK: User Details
