@@ -8,6 +8,8 @@
 import SwiftUI
 import PhotosUI // For Native SwiftUI image Picker
 import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 
 struct LoginView: View {
     //MARK: User Details
@@ -15,6 +17,8 @@ struct LoginView: View {
     @State var password: String = ""
     // MARK: View Propetties
     @State var createAccount: Bool = false
+    @State var showError: Bool = false
+    @State var errorMessage: String = ""
     var body: some View {
         VStack(spacing: 10) {
             Text("Sign you in")
@@ -35,14 +39,12 @@ struct LoginView: View {
                     .textContentType(.emailAddress)
                     .border(1, .gray.opacity(0.5))
                 
-                Button("Reset password?", action: {})
+                Button("Reset password?", action: resetPassword)
                     .font(.callout)
                     .fontWeight(.medium)
                     .hAlign(.trailing)
                 
-                Button {
-                    
-                } label: {
+                Button (action: loginUser) {
                     // MARK: Login Button
                     Text("Sign in")
                         .foregroundColor(.white)
@@ -73,6 +75,41 @@ struct LoginView: View {
         .fullScreenCover(isPresented: $createAccount) {
             RegisterView()
         }
+        // MARK: Display Alert
+        .alert(errorMessage ,isPresented: $showError, actions: {})
+    }
+    
+    func loginUser() {
+        Task {
+            do {
+                // With the help of Swift Concurrency AUth can be done with Single line
+                try await Auth.auth().sendPasswordReset(withEmail: emailId)
+                print("Link Sent")
+            } catch {
+                await setError(error)
+            }
+        }
+    }
+    
+    func resetPassword() {
+        Task {
+            do {
+                // With the help of Swift Concurrency AUth can be done with Single line
+                try await Auth.auth().signIn(withEmail: emailId, password: password)
+                print("User found")
+            } catch {
+                await setError(error)
+            }
+        }
+    }
+    
+    // MARK: Displaing Errors VIA Alert
+    func setError(_ error: Error) async {
+        // MARK: UI must be updated on main thread
+        await MainActor.run(body: {
+            errorMessage = error.localizedDescription
+            showError.toggle()
+        })
     }
 }
 // MARK: Register View
@@ -88,6 +125,13 @@ struct RegisterView: View {
     @Environment(\.dismiss) var dismiss
     @State var showImagePicker: Bool = false
     @State var photoItem: PhotosPickerItem?
+    @State var showError: Bool = false
+    @State var errorMessage: String = ""
+    // MARK: UserDefaults
+    @AppStorage("log_status") var logStatus: Bool = false
+    @AppStorage("user_profile_url") var profileURL: URL?
+    @AppStorage("user_name") var userNameStored: String = ""
+    @AppStorage("user_UID") var userUID: String = ""
     var body: some View {
         VStack(spacing: 10) {
             Text("Let's Register\nAccount")
@@ -137,6 +181,10 @@ struct RegisterView: View {
                 }
             }
         }
+        
+        // MARK: Displaying Alert
+        
+        .alert(errorMessage, isPresented: $showError, actions: {})
             
         }
     @ViewBuilder
@@ -148,7 +196,7 @@ struct RegisterView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 } else {
-                    Image("NullProfile")
+                    Image("h")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 }
@@ -184,19 +232,61 @@ struct RegisterView: View {
                 .border(1, .gray.opacity(0.5))
             
             
-            Button {
-                
-            } label: {
+            Button (action: registerUser) {
                 // MARK: Login Button
                 Text("Sign up")
                     .foregroundColor(.white)
                     .hAlign(.center)
                     .fillView(.blue)
             }
+            .disableWithOpacity(userName == "" || userBio == "" || emailId == "" || password == "" || userProfilePicData == nil)
             .padding(.top,15)
 
         }
     }
+    
+    func registerUser() {
+        Task {
+            do {
+                // MARK:  Step 1: create firebase ac
+                try await Auth.auth().createUser(withEmail: emailId, password: password)
+                // MARK:  Step 2: Uploading Profile Photo into firebase storage
+                guard let userUID = Auth.auth().currentUser?.uid else {return}
+                guard let imageData = userProfilePicData else {return}
+                let storageRef = Storage.storage().reference().child("Profile_Images").child(userUID)
+                let _ = try await storageRef.putDataAsync(imageData)
+                // MARK: Step 3: Donload photo URL
+                let downloadUrl = try await storageRef.downloadURL()
+                //MARK: Step 4: Creating a user firebasestore object
+                let user = User(username: userName, userBio: userBio, userBioLink: userBioLink, userUID: userUID, userEmail: emailId, userProfileURL: downloadUrl)
+                    // MARK: step 5: Saving User Doc into Firestore DataBase
+                let _ = try Firestore.firestore().collection("Users").document(userUID).setData(from: user, completion: { error in
+                    if error == nil {
+                        // MARK: print saved success
+                        print("Saved success")
+                        userNameStored = userName
+                        self.userUID = userUID
+                        profileURL = downloadUrl
+                        logStatus = true
+                    }
+                })
+            } catch {
+                // MARK: Deleting created ac in case
+                try await Auth.auth().currentUser?.delete() // ignore this lile because this will delete the already exiting user, mistakenly added
+                await setError(error)
+                
+            }
+        }
+    }
+    // MARK: Displaing Errors VIA Alert
+    func setError(_ error: Error) async {
+        // MARK: UI must be updated on main thread
+        await MainActor.run(body: {
+            errorMessage = error.localizedDescription
+            showError.toggle()
+        })
+    }
+    
     }
 
 
@@ -209,6 +299,14 @@ struct LoginView_Previews: PreviewProvider {
 
 //MARK: View Extention
 extension View{
+    // MARK: Disabling with Opacity
+    func disableWithOpacity(_ condition: Bool) -> some View {
+        self
+            .disabled(condition)
+            .opacity(condition ? 0.6 : 1)
+    }
+    
+    
     func hAlign(_ aligment: Alignment) -> some View {
         self
             .frame(maxWidth: .infinity, alignment:  aligment)
