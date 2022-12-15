@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct TwitAppApp: App {
+struct TwitApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
