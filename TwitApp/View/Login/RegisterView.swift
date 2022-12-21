@@ -1,117 +1,16 @@
 //
-//  LoginView.swift
+//  RegisterView.swift
 //  TwitApp
 //
 //  Created by Stanislav Sobolevsky on 15.12.22.
 //
 
 import SwiftUI
-import PhotosUI // For Native SwiftUI image Picker
-import Firebase
-import FirebaseFirestore
+import FirebaseAuth
 import FirebaseStorage
+import FirebaseFirestore
+import PhotosUI
 
-struct LoginView: View {
-    //MARK: User Details
-    @State var emailId: String = ""
-    @State var password: String = ""
-    // MARK: View Propetties
-    @State var createAccount: Bool = false
-    @State var showError: Bool = false
-    @State var errorMessage: String = ""
-    var body: some View {
-        VStack(spacing: 10) {
-            Text("Sign you in")
-                .font(.largeTitle.bold())
-                .hAlign(.leading)
-            
-            Text("Welcome Back, \nYou have been missed")
-                .font(.title3)
-                .hAlign(.leading)
-            
-            VStack(spacing: 10) {
-                TextField("Email", text: $emailId)
-                    .textContentType(.emailAddress)
-                    .border(1, .gray.opacity(0.5))
-                    .padding(.top,25)
-                
-                SecureField("Password", text: $password)
-                    .textContentType(.emailAddress)
-                    .border(1, .gray.opacity(0.5))
-                
-                Button("Reset password?", action: resetPassword)
-                    .font(.callout)
-                    .fontWeight(.medium)
-                    .hAlign(.trailing)
-                
-                Button (action: loginUser) {
-                    // MARK: Login Button
-                    Text("Sign in")
-                        .foregroundColor(.white)
-                        .hAlign(.center)
-                        .fillView(.blue)
-                }
-                .padding(.top,15)
-
-            }
-            
-            // MARK: Register Button
-            HStack{
-                Text("Don't have an account")
-                    .foregroundColor(.black)
-                    
-                Button("Register now") {
-                    createAccount.toggle()
-                }
-                .fontWeight(.medium)
-                .foregroundColor(.blue)
-            }
-            .font(.callout)
-            .vAlign(.bottom)
-        }
-        .vAlign(.top)
-        .padding(15)
-        // MARK: Register View VIA Sheets
-        .fullScreenCover(isPresented: $createAccount) {
-            RegisterView()
-        }
-        // MARK: Display Alert
-        .alert(errorMessage ,isPresented: $showError, actions: {})
-    }
-    
-    func loginUser() {
-        Task {
-            do {
-                // With the help of Swift Concurrency AUth can be done with Single line
-                try await Auth.auth().sendPasswordReset(withEmail: emailId)
-                print("Link Sent")
-            } catch {
-                await setError(error)
-            }
-        }
-    }
-    
-    func resetPassword() {
-        Task {
-            do {
-                // With the help of Swift Concurrency AUth can be done with Single line
-                try await Auth.auth().signIn(withEmail: emailId, password: password)
-                print("User found")
-            } catch {
-                await setError(error)
-            }
-        }
-    }
-    
-    // MARK: Displaing Errors VIA Alert
-    func setError(_ error: Error) async {
-        // MARK: UI must be updated on main thread
-        await MainActor.run(body: {
-            errorMessage = error.localizedDescription
-            showError.toggle()
-        })
-    }
-}
 // MARK: Register View
 struct RegisterView: View {
     //MARK: User Details
@@ -127,6 +26,7 @@ struct RegisterView: View {
     @State var photoItem: PhotosPickerItem?
     @State var showError: Bool = false
     @State var errorMessage: String = ""
+    @State var isLoading: Bool = false
     // MARK: UserDefaults
     @AppStorage("log_status") var logStatus: Bool = false
     @AppStorage("user_profile_url") var profileURL: URL?
@@ -166,6 +66,9 @@ struct RegisterView: View {
         }
         .vAlign(.top)
         .padding(15)
+        .overlay(content: {
+            LoadingView(show: $isLoading)
+        })
         .photosPicker(isPresented: $showImagePicker, selection: $photoItem)
         .onChange(of: photoItem) { newValue in
             // MARK: Extracting UIImage From PhotoItem
@@ -246,6 +149,8 @@ struct RegisterView: View {
     }
     
     func registerUser() {
+        isLoading = true
+        closeKeyBoard()
         Task {
             do {
                 // MARK:  Step 1: create firebase ac
@@ -284,58 +189,14 @@ struct RegisterView: View {
         await MainActor.run(body: {
             errorMessage = error.localizedDescription
             showError.toggle()
+            isLoading = false
         })
     }
     
     }
 
-
-struct LoginView_Previews: PreviewProvider {
+struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
-        //RegisterView()
-    }
-}
-
-//MARK: View Extention
-extension View{
-    // MARK: Disabling with Opacity
-    func disableWithOpacity(_ condition: Bool) -> some View {
-        self
-            .disabled(condition)
-            .opacity(condition ? 0.6 : 1)
-    }
-    
-    
-    func hAlign(_ aligment: Alignment) -> some View {
-        self
-            .frame(maxWidth: .infinity, alignment:  aligment)
-    }
-    
-    func vAlign(_ aligment: Alignment) -> some View {
-        self
-            .frame(maxHeight: .infinity, alignment:  aligment)
-    }
-    
-    // MARK: Custom Border View With Padding, рамка
-    func border(_ width: CGFloat,_ color: Color) -> some View {
-        self
-            .padding(.horizontal,15)
-            .padding(.vertical,10)
-            .background {
-                RoundedRectangle(cornerRadius: 5, style: .continuous)
-                    .stroke(color, lineWidth: width)
-            }
-    }
-    
-    // MARK: Custom Fill View With Padding
-    func fillView(_ color: Color) -> some View {
-        self
-            .padding(.horizontal,15)
-            .padding(.vertical,10)
-            .background {
-                RoundedRectangle(cornerRadius: 5, style: .continuous)
-                    .fill(color)
-            }
+        RegisterView()
     }
 }
