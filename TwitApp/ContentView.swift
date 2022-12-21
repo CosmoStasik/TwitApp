@@ -13,7 +13,7 @@ struct ContentView: View {
      // MARK: Redirecting user based on log status
        
         if logStatus{
-            Text("Main View")
+            MainView()
         } else {
              LoginView()
         }
