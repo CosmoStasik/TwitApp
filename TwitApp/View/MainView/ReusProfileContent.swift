@@ -15,7 +15,7 @@ struct ReusProfileContent: View {
             LazyVStack{
                 HStack(spacing: 12) {
                     WebImage(url: user.userProfileURL).placeholder{
-                        // MARK: P;aceholder image
+                        // MARK: Placeholder image
                         Image("h")
                             .resizable()
                     }
@@ -50,8 +50,9 @@ struct ReusProfileContent: View {
                     .fontWeight(.semibold)
                     .foregroundColor(.black)
                     .hAlign(.leading)
-                    .padding(.vertical,15)
+                    .padding(.vertical,20)
             }
+            .padding()
         }
     }
 }
