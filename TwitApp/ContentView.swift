@@ -17,6 +17,9 @@ struct ContentView: View {
         } else {
              LoginView()
         }
+//        CreateNewPost { _ in
+//
+//        }
     }
 }
 

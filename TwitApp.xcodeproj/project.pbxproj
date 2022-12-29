@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8522140C295AE83A00357E2F /* ReusablePostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8522140B295AE83A00357E2F /* ReusablePostView.swift */; };
+		8522140E295AF03C00357E2F /* PostCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8522140D295AF03C00357E2F /* PostCardView.swift */; };
 		85A0B0F6294B55520009AAD6 /* TwitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A0B0F5294B55520009AAD6 /* TwitApp.swift */; };
 		85A0B0F8294B55520009AAD6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A0B0F7294B55520009AAD6 /* ContentView.swift */; };
 		85A0B0FA294B55550009AAD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85A0B0F9294B55550009AAD6 /* Assets.xcassets */; };
@@ -25,9 +27,14 @@
 		85CA1AEB294B8ADB0020F5E7 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA1AEA294B8ADB0020F5E7 /* ProfileView.swift */; };
 		85CA1AED294B95B40020F5E7 /* ReusProfileContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CA1AEC294B95B40020F5E7 /* ReusProfileContent.swift */; };
 		85CA1AF0294B98270020F5E7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 85CA1AEF294B98270020F5E7 /* SDWebImageSwiftUI */; };
+		85F7D35629599101006BD2FE /* CreateNewPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F7D35529599101006BD2FE /* CreateNewPost.swift */; };
+		85F7D3582959914F006BD2FE /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F7D3572959914F006BD2FE /* Post.swift */; };
+		85F7D35A2959AB7D006BD2FE /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F7D3592959AB7D006BD2FE /* PostsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8522140B295AE83A00357E2F /* ReusablePostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusablePostView.swift; sourceTree = "<group>"; };
+		8522140D295AF03C00357E2F /* PostCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCardView.swift; sourceTree = "<group>"; };
 		85A0B0F2294B55520009AAD6 /* TwitApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85A0B0F5294B55520009AAD6 /* TwitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitApp.swift; sourceTree = "<group>"; };
 		85A0B0F7294B55520009AAD6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -42,6 +49,9 @@
 		85CA1AE8294B88A70020F5E7 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		85CA1AEA294B8ADB0020F5E7 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		85CA1AEC294B95B40020F5E7 /* ReusProfileContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusProfileContent.swift; sourceTree = "<group>"; };
+		85F7D35529599101006BD2FE /* CreateNewPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewPost.swift; sourceTree = "<group>"; };
+		85F7D3572959914F006BD2FE /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		85F7D3592959AB7D006BD2FE /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				85CA1ADD294B6CC90020F5E7 /* User.swift */,
+				85F7D3572959914F006BD2FE /* Post.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -140,6 +151,10 @@
 				85CA1AE8294B88A70020F5E7 /* MainView.swift */,
 				85CA1AEA294B8ADB0020F5E7 /* ProfileView.swift */,
 				85CA1AEC294B95B40020F5E7 /* ReusProfileContent.swift */,
+				85F7D35529599101006BD2FE /* CreateNewPost.swift */,
+				85F7D3592959AB7D006BD2FE /* PostsView.swift */,
+				8522140B295AE83A00357E2F /* ReusablePostView.swift */,
+				8522140D295AF03C00357E2F /* PostCardView.swift */,
 			);
 			path = MainView;
 			sourceTree = "<group>";
@@ -237,11 +252,16 @@
 				85CA1ADE294B6CC90020F5E7 /* User.swift in Sources */,
 				85CA1AEB294B8ADB0020F5E7 /* ProfileView.swift in Sources */,
 				85CA1AED294B95B40020F5E7 /* ReusProfileContent.swift in Sources */,
+				85F7D3582959914F006BD2FE /* Post.swift in Sources */,
 				85CA1AE9294B88A70020F5E7 /* MainView.swift in Sources */,
+				8522140C295AE83A00357E2F /* ReusablePostView.swift in Sources */,
 				85A0B10B294B57E10009AAD6 /* LoginView.swift in Sources */,
 				85A0B0F8294B55520009AAD6 /* ContentView.swift in Sources */,
 				85CA1AE4294B874B0020F5E7 /* RegisterView.swift in Sources */,
+				85F7D35629599101006BD2FE /* CreateNewPost.swift in Sources */,
+				85F7D35A2959AB7D006BD2FE /* PostsView.swift in Sources */,
 				85A0B0F6294B55520009AAD6 /* TwitApp.swift in Sources */,
+				8522140E295AF03C00357E2F /* PostCardView.swift in Sources */,
 				85CA1AE0294B79B60020F5E7 /* LoadingView.swift in Sources */,
 				85CA1AE7294B88050020F5E7 /* View+Extention.swift in Sources */,
 			);
