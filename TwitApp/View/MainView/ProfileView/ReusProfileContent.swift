@@ -10,6 +10,7 @@ import SDWebImageSwiftUI
 
 struct ReusProfileContent: View {
     var user: User
+    @State private var fetchedPosts: [Post] = []
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             LazyVStack{
@@ -50,9 +51,10 @@ struct ReusProfileContent: View {
                     .fontWeight(.semibold)
                     .foregroundColor(.black)
                     .hAlign(.leading)
-                    .padding(.vertical,20)
+                    .padding(.vertical,25)
+                ReusablePostView(basedOnUID: true, uid: user.userUID, posts: $fetchedPosts)
             }
-            .padding()
+            .padding(15)
         }
     }
 }
