@@ -32,15 +32,10 @@ struct CreateNewPost: View {
     var body: some View {
         VStack {
             HStack {
-                Menu {
                     Button("Cancel", role: .destructive){
                         dismiss()
                     }
-                } label: {
-                    Text("Cancel")
-                        .font(.callout)
-                        .foregroundColor(.black)
-                }
+
                 .hAlign(.leading)
                 
                 Button(action: createPost) {

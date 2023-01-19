@@ -50,7 +50,7 @@ struct ReusablePostView: View {
             posts = []
             // Resetting Pagination Doc
             paginationDoc = nil
-            await fetchPosts() // т,к Выражиение асинхронно оно должен быть помеченно "ожиданием"
+            await fetchPosts() // т,к Выражиение асинхронно оно должен быть помеченно "ожиданием" await
         }
         
         .task {

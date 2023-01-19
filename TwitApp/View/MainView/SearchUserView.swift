@@ -15,7 +15,6 @@ struct SearchUserView: View {
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         //MARK: Remove NavigStact from the SearchView, because i add NavigStack in PostView
-//        NavigationStack{
             List {
                 ForEach(fetchedUsers) { user in
                     NavigationLink {
@@ -43,20 +42,9 @@ struct SearchUserView: View {
                     fetchedUsers = []
                 }
             })
-//            .toolbar {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button("Cancel") {
-//                        dismiss()
-//                    }
-//                    .tint(.black)
-//                }
-//            }
-//        }
     }
     func searchUsers()async {
         do {
-//            let queryLowerCased = searchText.lowercased()
-//            let queryUpperCased = searchText.uppercased()
             
             let documents = try await Firestore.firestore().collection("Users")
                 .whereField("username", isGreaterThanOrEqualTo: searchText)

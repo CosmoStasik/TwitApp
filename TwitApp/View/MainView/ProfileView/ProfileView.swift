@@ -31,10 +31,7 @@ struct ProfileView: View {
                 } else {
                     ProgressView()
                 }
-//            ScrollView(.vertical, showsIndicators: false) {
-//                if let myProfile{
-//                    Text(myProfile.username)
-//                }
+
             }
           
             .navigationTitle("My Profile")
@@ -50,7 +47,7 @@ struct ProfileView: View {
                             Button("Delete Account", role: .destructive, action: deleteAccount)
                             
                         } label: {
-                            Image(systemName: "ellipsis.bubble")
+                            Image(systemName: "ellipsis")
                                 .rotationEffect(.init(degrees: 90))
                                 .tint(.black)
                                 .scaleEffect(0.8)
